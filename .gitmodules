@@ -1,0 +1,3 @@
+[submodule "hifive1-mnist/x86/libfixmath"]
+	path = hifive1-mnist/x86/libfixmath
+	url = https://github.com/PetteriAimonen/libfixmath.git
