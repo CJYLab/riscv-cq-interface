@@ -69,24 +69,22 @@ int main()
   uint64_t after_cycle;
   uint64_t after_instret;
 
+  uint64_t cycle = 0, instret = 0;
+  
   volatile char *p_data = _binary_t10k_images_idx3_ubyte_start;
   
   printf ("Flash Memory Latency Measurement\n");
   
   for (int i = 0; i < 28*28; i++){
     rdmcycle(&before_cycle);
-    rdminstret(&before_instret);
-
     volatile char result = p_data[i];
-    
     rdmcycle(&after_cycle);
-    rdminstret(&after_instret);
-
+	cycle += (after_cycle - before_cycle);
+	
 	if ((i % 100) == 0) {
-	  printf ("Start:%ld, Stop:%ld, Cycle=%ld\n",
-			  (uint32_t)(before_cycle),
-			  (uint32_t)after_cycle,
-			  (uint32_t)(after_cycle - before_cycle));
+	  printf ("SPI Flash Read 100 times average:%ld\n",
+			  (uint32_t)(cycle / 100));
+	  cycle = 0;
 	}
   }
 
@@ -99,10 +97,8 @@ int main()
   }
   rdmcycle(&after_cycle);
   rdminstret(&after_instret);
-  printf ("Start:%ld, Stop:%ld, Cycle=%ld\n",
-		  (uint32_t)(before_cycle),
-		  (uint32_t)after_cycle,
+  printf ("SPI Flash Read latency for 28*28*10 byte =%ld\n",
 		  (uint32_t)(after_cycle - before_cycle));
-
+  
   return 0;
 }
