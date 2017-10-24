@@ -94,33 +94,26 @@ uint64_t matrixmul_hw2 (int32_t *output_data, int32_t *A, int32_t *B, int64_t ma
 
 int main()
 {
-  uint64_t cycle;
+  uint64_t cycle_sw, cycle_hw1, cycle_hw2;
   int32_t output_data[N*K]; // Allocate Largest Size
 
-  printf ("                    HW2, HW1, SW\n");
+  printf ("                    SW, HW1, HW2\n");
   for (int size = 2; size <=16; size *= 2) {
+
+    cycle_sw  = matrixmul_sw  (output_data, input1_data, input2_data, size, size, size, 0);
+    cycle_hw1 = matrixmul_hw1 (output_data, input1_data, input2_data, size, size, size, 0);
+    cycle_hw2 = matrixmul_hw2 (output_data, input1_data, input2_data, size, size, size, 0);
+
     printf ("%2d x%2d x%2d : ", size, size, size);
-
-    cycle = matrixmul_sw  (output_data, input1_data, input2_data, size, size, size, 0);
-    printf ("%ld, ", cycle);
-
-    cycle = matrixmul_hw1 (output_data, input1_data, input2_data, size, size, size, 0);
-    printf ("%ld, ", cycle);
-
-    cycle = matrixmul_hw2 (output_data, input1_data, input2_data, size, size, size, 0);
-    printf ("%ld, ", cycle);
-
-    printf ("\n");
+    printf ("%10ld, %10ld, %10ld\n", cycle_sw, cycle_hw1, cycle_hw2);
   }
 
+  cycle_sw  = matrixmul_sw  (output_data, input1_data, input2_data, N, M, K, 1);
+  cycle_hw1 = matrixmul_hw1 (output_data, input1_data, input2_data, N, M, K, 1);
+  cycle_hw2 = matrixmul_hw2 (output_data, input1_data, input2_data, N, M, K, 1);
+
   printf ("18 x24 x28 : ");
-  cycle = matrixmul_sw  (output_data, input1_data, input2_data, N, M, K, 0);
-  printf ("%ld, ", cycle);
-  cycle = matrixmul_hw1 (output_data, input1_data, input2_data, N, M, K, 0);
-  printf ("%ld, ", cycle);
-  cycle = matrixmul_hw2 (output_data, input1_data, input2_data, N, M, K, 0);
-  printf ("%ld, ", cycle);
-  printf ("\n");
+  printf ("%10ld, %10ld, %10ld\n", cycle_sw, cycle_hw1, cycle_hw2);
 
   return 0;
 }
