@@ -1,3 +1,5 @@
+.PHONY : libfixmath
+
 GPERF := off
 
 DEFINES :=
@@ -39,8 +41,11 @@ train_twolayernet_double: train_twolayernet_double.c
 train_twolayernet_float: train_twolayernet_float.c
 	gcc $(COPTS) $^ -o $@ $(LOPTS)
 
-train_twolayernet_fix16: train_twolayernet_fix16.c
+train_twolayernet_fix16: libfixmath train_twolayernet_fix16.c
 	gcc $(COPTS) $^ -o $@ -L./libfixmath/libfixmath -I./libfixmath/libfixmath -lfixmath $(LOPTS)
+
+libfixmath:
+	$(MAKE) -C ./libfixmath/libfixmath
 
 %-ubyte: %-ubyte.gz
 	gunzip $^
